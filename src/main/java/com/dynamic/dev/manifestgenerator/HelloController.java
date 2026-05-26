@@ -29,11 +29,10 @@ public class HelloController {
     private Label welcomeText;
 
     @FXML
-    protected void onHelloButtonClick() throws NoSuchAlgorithmException, IOException {
+    protected void onHelloButtonClick() throws IOException {
         welcomeText.setText("Welcome to JavaFX Application!");
         Stack<File> sub_folder = new Stack<>();
         String TARGET_DIRECTORY = "C:\\Users\\lenovo\\Downloads\\";
-        Path path = Path.of(TARGET_DIRECTORY);
         boolean INCLUDE_HIDDEN_FILES = false;
 
         File root = new File(TARGET_DIRECTORY);
@@ -43,11 +42,11 @@ public class HelloController {
 
         sub_folder.push(root);
 
-
+        System.out.println("Conflict????");
         //TODO NEED COMPLEXITY IMPROVEMENT I THINK
         while (!sub_folder.isEmpty()){
-            File temp_file = sub_folder.pop();
-            for (File file : temp_file.listFiles()){
+            File temp_files = sub_folder.pop();
+            for (File file : temp_files.listFiles()){
                 System.out.println(file.toPath());
                 if (!INCLUDE_HIDDEN_FILES){
                     if (file.isHidden()) continue;
@@ -62,9 +61,9 @@ public class HelloController {
                 byte[] result = md.digest(read_file_result);
 
                 System.out.println("{");
-                System.out.println("PATH: " + file.getPath().replace(TARGET_DIRECTORY,""));
-                System.out.println("DIGEST: " + HexFormat.of().formatHex(result));
-                System.out.println("SIZE: " + file.length());
+                System.out.println("PATHS: " + file.getPath().replace(TARGET_DIRECTORY,""));
+                System.out.println("DIGESTS: " + HexFormat.of().formatHex(result));
+                System.out.println("SIZES: " + file.length());
                 System.out.println("}");
                 System.out.println();
 
@@ -76,4 +75,6 @@ public class HelloController {
 
 
     }
+
+
 }
