@@ -29,10 +29,11 @@ public class HelloController {
     private Label welcomeText;
 
     @FXML
-    protected void onHelloButtonClick() throws IOException {
+    protected void onHelloButtonClick() throws NoSuchAlgorithmException, IOException {
         welcomeText.setText("Welcome to JavaFX Application!");
         Stack<File> sub_folder = new Stack<>();
-        String TARGET_DIRECTORY = "C:\\Users\\lenovo\\Downloads\\";
+        String TARGET_DIRECTORY = "C:\\Users\\HP\\Desktop\\university\\machine vision\\Vision8";
+        Path path = Path.of(TARGET_DIRECTORY);
         boolean INCLUDE_HIDDEN_FILES = false;
 
         File root = new File(TARGET_DIRECTORY);
@@ -42,11 +43,11 @@ public class HelloController {
 
         sub_folder.push(root);
 
-        System.out.println("Conflict????");
+
         //TODO NEED COMPLEXITY IMPROVEMENT I THINK
         while (!sub_folder.isEmpty()){
-            File temp_files = sub_folder.pop();
-            for (File file : temp_files.listFiles()){
+            File temp_file = sub_folder.pop();
+            for (File file : temp_file.listFiles()){
                 System.out.println(file.toPath());
                 if (!INCLUDE_HIDDEN_FILES){
                     if (file.isHidden()) continue;
@@ -61,9 +62,9 @@ public class HelloController {
                 byte[] result = md.digest(read_file_result);
 
                 System.out.println("{");
-                System.out.println("PATHS: " + file.getPath().replace(TARGET_DIRECTORY,""));
-                System.out.println("DIGESTS: " + HexFormat.of().formatHex(result));
-                System.out.println("SIZES: " + file.length());
+                System.out.println("PATH: " + file.getPath().replace(TARGET_DIRECTORY,""));
+                System.out.println("DIGEST: " + HexFormat.of().formatHex(result));
+                System.out.println("SIZE: " + file.length());
                 System.out.println("}");
                 System.out.println();
 
@@ -76,5 +77,51 @@ public class HelloController {
 
     }
 
+    @FXML
+    protected void onHelloButtonClick2(String TARGET_DIRECTORY, Boolean IsHidden) throws NoSuchAlgorithmException, IOException {
+        welcomeText.setText("Welcome to JavaFX Application!");
+        Stack<File> sub_folder = new Stack<>();
+        Path path = Path.of(TARGET_DIRECTORY);
+        boolean INCLUDE_HIDDEN_FILES = false;
 
+        File root = new File(TARGET_DIRECTORY);
+
+        if (!root.exists() || !root.isDirectory())
+            return;
+
+        sub_folder.push(root);
+
+
+        //TODO NEED COMPLEXITY IMPROVEMENT I THINK
+        while (!sub_folder.isEmpty()){
+            File temp_file = sub_folder.pop();
+            for (File file : temp_file.listFiles()){
+                System.out.println(file.toPath());
+                if (!INCLUDE_HIDDEN_FILES){
+                    if (IsHidden) continue;
+                }
+
+                if (file.isDirectory()){
+                    sub_folder.push(file);
+                }
+
+                byte[] read_file_result = Files.readAllBytes(file.toPath());
+
+                byte[] result = md.digest(read_file_result);
+
+                System.out.println("{");
+                System.out.println("PATH: " + file.getPath().replace(TARGET_DIRECTORY,""));
+                System.out.println("DIGEST: " + HexFormat.of().formatHex(result));
+                System.out.println("SIZE: " + file.length());
+                System.out.println("}");
+                System.out.println();
+
+                md.reset();
+
+
+            }
+        }
+
+
+    }
 }
